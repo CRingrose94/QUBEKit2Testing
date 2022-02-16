@@ -3,7 +3,7 @@ import os
 
 def get_dens_hvap_from_qb():
     """
-    Extract the densities and hvaps from the qubebench output.
+    Extract the densities and hvaps from the QUBEBench output.
     """
 
     for file in os.listdir('.'):
@@ -32,8 +32,8 @@ def get_dens_hvap_from_qb():
 
 def get_dens_hvap_from_fb(file_path='optimise.out'):
     """
-    Extract the densities and hvaps from the forcebalance output.
-    :param file_path: forcebalance output filepath optimise.out
+    Extract the densities and hvaps from the ForceBalance output.
+    :param file_path: ForceBalance output filepath optimise.out
     """
 
     densities = dict()
@@ -58,6 +58,10 @@ def get_dens_hvap_from_fb(file_path='optimise.out'):
 
 
 def get_dens_hvap_from_csv(file_path='results.csv'):
+    """
+    Extract the densities and hvaps from the QUBEBench csv output.
+    :param file_path: results.csv output file path
+    """
     densities = {i: 0 for i in range(1, 54)}
     enthalpies = {i: 0 for i in range(1, 54)}
 
@@ -109,10 +113,16 @@ def calc_mues(run_type='qb', halos=False):
     dens_avg_mue = sum(abs(dens - exp_dens) for dens, exp_dens in zip(densities.values(), exp_densities.values())) / len(exp_densities)
     hvap_avg_mue = sum(abs(hvap - exp_hvap) for hvap, exp_hvap in zip(enthalpies.values(), exp_enthalpies.values())) / len(exp_enthalpies)
 
+    for dens, exp_dens in zip(densities.values(), exp_densities.values()):
+        print(abs(dens - exp_dens))
+
+    for hvap, exp_hvap in zip(enthalpies.values(), exp_enthalpies.values()):
+        print(abs(hvap - exp_hvap))
+
     print(f'Density, Hvap MUEs: {round(dens_avg_mue, 4)}, {round(hvap_avg_mue, 4)}')
 
 
 if __name__ == '__main__':
 
-    os.chdir('../runs/training/019')
-    calc_mues('qb', halos=False)
+    os.chdir('../runs/training/010')
+    calc_mues('csv', halos=False)
